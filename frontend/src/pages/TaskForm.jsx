@@ -1,0 +1,32 @@
+import React, { useState } from 'react'
+import api from '../services/api'
+
+export default function TaskForm({ onSaved }){
+  const [form, setForm] = useState({ title:'', description:'', status:'pending' })
+  const [msg, setMsg] = useState('')
+  const submit = async e => {
+    e.preventDefault()
+    try{
+      await api.post('/tasks', form)
+      setForm({ title:'', description:'', status:'pending' })
+      setMsg('Saved')
+      if (onSaved) onSaved()
+    }catch(err){ setMsg(err?.response?.data?.message || 'Error') }
+  }
+  return (
+    <div style={{marginTop:12}}>
+      <form onSubmit={submit} className="container">
+        <h3>Create Task</h3>
+        <input placeholder="Title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} required />
+        <textarea placeholder="Description" value={form.description} onChange={e=>setForm({...form,description:e.target.value})} />
+        <select value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>
+          <option value="pending">Pending</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button type="submit">Save Task</button>
+      </form>
+      {msg && <p style={{textAlign:'center'}}>{msg}</p>}
+    </div>
+  )
+}
