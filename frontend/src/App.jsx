@@ -1,15 +1,9 @@
-import React from 'react'
-import { Outlet, Link } from 'react-router-dom'
-import Header from './components/Header'
+import axios from 'axios';
 
-export default function App(){
-  return (
-    <div>
-      <Header />
-      <main style={{ padding: 16 }}>
-        <Outlet />
-      </main>
-      <footer style={{ textAlign: 'center', padding: 12 }}>Task Manager</footer>
-    </div>
-  )
-}
+const API_URL = import.meta.env.VITE_API_URL;
+
+const api = axios.create({
+  baseURL: API_URL
+});
+
+export default api;
